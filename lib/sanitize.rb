@@ -62,6 +62,37 @@ class Sanitize
         node.unlink unless @config[:allow_comments]
       elsif node.element?
         name = node.name.to_s.downcase
+        parent_name = node.parent ? node.parent.name.to_s.downcase : nil
+
+        # Special handling of objects is necessary to limit by specific domains.
+        if @config[:object_urls].any? &&
+        [name, parent_name].include?('object')
+          unless @config[:object_config][:elements].include?(name)
+            node.unlink
+            next
+          end
+
+          attr_whitelist = @config[:object_config][:attributes][name] || []
+
+          # Remove non-whitelisted object interior tag attributes
+          node.attribute_nodes.each do |attr|
+            attr.unlink unless attr_whitelist.include?(attr.name.downcase)
+          end
+
+          # Remove non-whitelisted object URLs.
+          object_url = if name == 'param' && node['name'] == 'movie'
+            node['value']
+          elsif name == 'embed'
+            node['src']
+          end
+
+          if object_url &&
+          !@config[:object_urls].any?{|good| object_url.index(good) == 0}
+            node.parent.unlink
+          end
+
+          next
+        end
 
         # Delete any element that isn't in the whitelist.
         unless @config[:elements].include?(name)

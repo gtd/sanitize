@@ -145,6 +145,37 @@ include the symbol <code>:relative</code> in the protocol array:
     'a' => {'href' => ['http', 'https', :relative]}
   }
 
+==== :object_urls
+
+URL prefixes to allow specific flash embed codes.  This can be used to allow
+standard video embeds such as provided by YouTube:
+
+  :object_urls => ['http://www.youtube.com']
+
+*Warning* Do not under any circumstances add 'object' or 'embed' to the standard
+config.  It is unnecessary and will open an XSS hole.
+
+Because object tags are more complex than most other tags and include many
+XSS attack vectors, this functionality follows a completely different code path
+from the regular filtering. There is a secondary configuration variable that
+controls what is allowed on the object tag and its descendents, by default it
+is:
+
+  :object_config => {
+    :elements => ['object', 'param', 'embed'],
+    :attributes => {
+      'object' => ['width', 'height'],
+      'param'  => ['name', 'value'],
+      'embed'  => ['src', 'type', 'allowscriptaccess', 'allowfullscreen',
+                   'width', 'height']
+  }}
+
+This config is applied to the object tag and all of its immediate descendents
+instead of the standard config.  This initial configuration was crafted specifically
+to allow YouTube and Vimeo embed codes in this format:
+
+  <object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/qVaEPx_VyXs&hl=en&fs=1&color1=0xcc2550&color2=0xe87a9f"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/qVaEPx_VyXs&hl=en&fs=1&color1=0xcc2550&color2=0xe87a9f" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>
+
 
 == Contributors
 
@@ -152,6 +183,7 @@ The following lovely people have contributed to Sanitize in the form of patches
 or ideas that later became code:
 
 * Peter Cooper <git@peterc.org>
+* Gabe da Silveira <gabe@websaviour.com>
 * Ryan Grove <ryan@wonko.com>
 * Adam Hooper <adam@adamhooper.com>
 * Mutwin Kraus <mutle@blogage.de>

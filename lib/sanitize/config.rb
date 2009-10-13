@@ -22,6 +22,16 @@
 
 class Sanitize
   module Config
+    FLASH_VIDEO_OBJECT = {
+      :elements => ['object', 'param', 'embed'],
+      :attributes => {
+        'object' => ['width', 'height'],
+        'param'  => ['name', 'value'],
+        'embed'  => ['src', 'type', 'allowscriptaccess', 'allowfullscreen',
+                    'width', 'height']
+      }
+    }
+
     DEFAULT = {
       # Whether or not to allow HTML comments. Allowing comments is strongly
       # discouraged, since IE allows script execution within conditional
@@ -39,6 +49,18 @@ class Sanitize
       # HTML elements to allow. By default, no elements are allowed (which means
       # that all HTML will be stripped).
       :elements => [],
+
+      # URL prefixes to be allowed in object embeds.  Note that any kind of arbitrary
+      # object embed would be insecure, therefore this is locked down pretty tight
+      # to allow only YouTube-style embed codes.  Under no circumstances should you
+      # add object to the allowed element above, these are handled by a separate code
+      # path in the sanitizer.  You must include the fully qualified URL name including
+      # protocol since it matches directly against the attribute value.
+      :object_urls => [],
+
+      # This specifies the elements and attributes on an object and its immediate
+      # descendents.  The default configuration is for standard flash video embeds.
+      :object_config => FLASH_VIDEO_OBJECT,
 
       # Output format. Supported formats are :html and :xhtml (which is the
       # default).
