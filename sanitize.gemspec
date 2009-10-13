@@ -1,18 +1,17 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{sanitize}
+  s.name = %q{dasil003-sanitize}
   s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Ryan Grove"]
-  s.date = %q{2009-10-11}
-  s.email = %q{ryan@wonko.com}
+  s.authors = ["Ryan Grove","Gabe da Silveira"]
+  s.date = %q{2009-10-13}
+  s.email = %q{gabe@websaviour.com}
   s.files = ["HISTORY", "LICENSE", "README.rdoc", "lib/sanitize/config/basic.rb", "lib/sanitize/config/relaxed.rb", "lib/sanitize/config/restricted.rb", "lib/sanitize/config.rb", "lib/sanitize/version.rb", "lib/sanitize.rb"]
-  s.homepage = %q{http://github.com/rgrove/sanitize/}
+  s.homepage = %q{http://github.com/dasil003/sanitize/}
   s.require_paths = ["lib"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.6")
-  s.rubyforge_project = %q{riposte}
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Whitelist-based HTML sanitizer.}
 
