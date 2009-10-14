@@ -25,21 +25,20 @@ require 'bacon'
 require 'sanitize'
 
 strings = {
-  # Spaces inside some anchor tags works around http://github.com/tenderlove/nokogiri/issues#issue/149
   :basic => {
-    :html       => '<b>Lo<!-- comment -->rem</b> <a href="pants" title="foo">ipsum</a> <a href="http://foo.com/"><strong>dolor</strong> </a> sit<br/>amet <script>alert("hello world");</script>',
-    :default    => 'Lorem ipsum dolor  sitamet alert("hello world");',
-    :restricted => '<b>Lorem</b> ipsum <strong>dolor</strong>  sitamet alert("hello world");',
-    :basic      => '<b>Lorem</b> <a href="pants" rel="nofollow">ipsum</a> <a href="http://foo.com/" rel="nofollow"><strong>dolor</strong> </a> sit<br />amet alert("hello world");',
-    :relaxed    => '<b>Lorem</b> <a href="pants" title="foo">ipsum</a> <a href="http://foo.com/"><strong>dolor</strong> </a> sit<br />amet alert("hello world");'
+    :html       => '<b>Lo<!-- comment -->rem</b> <a href="pants" title="foo">ipsum</a> <a href="http://foo.com/"><strong>dolor</strong></a> sit<br/>amet <script>alert("hello world");</script>',
+    :default    => 'Lorem ipsum dolor sitamet alert("hello world");',
+    :restricted => '<b>Lorem</b> ipsum <strong>dolor</strong> sitamet alert("hello world");',
+    :basic      => '<b>Lorem</b> <a href="pants" rel="nofollow">ipsum</a> <a href="http://foo.com/" rel="nofollow"><strong>dolor</strong></a> sit<br />amet alert("hello world");',
+    :relaxed    => '<b>Lorem</b> <a href="pants" title="foo">ipsum</a> <a href="http://foo.com/"><strong>dolor</strong></a> sit<br />amet alert("hello world");'
   },
 
   :malformed => {
-    :html       => 'Lo<!-- comment -->rem</b> <a href=pants title="foo>ipsum <a href="http://foo.com/"> <strong>dolor</a></strong> sit<br/>amet <script>alert("hello world");',
-    :default    => 'Lorem  dolor sitamet alert("hello world");',
-    :restricted => 'Lorem  <strong>dolor</strong> sitamet alert("hello world");',
-    :basic      => 'Lorem <a href="pants" rel="nofollow"> <strong>dolor</strong></a> sit<br />amet alert("hello world");',
-    :relaxed    => 'Lorem <a href="pants" title="foo&gt;ipsum &lt;a href="> <strong>dolor</strong></a> sit<br />amet alert("hello world");'
+    :html       => 'Lo<!-- comment -->rem</b> <a href=pants title="foo>ipsum <a href="http://foo.com/"><strong>dolor</a></strong> sit<br/>amet <script>alert("hello world");',
+    :default    => 'Lorem dolor sitamet alert("hello world");',
+    :restricted => 'Lorem <strong>dolor</strong> sitamet alert("hello world");',
+    :basic      => 'Lorem <a href="pants" rel="nofollow"><strong>dolor</strong></a> sit<br />amet alert("hello world");',
+    :relaxed    => 'Lorem <a href="pants" title="foo&gt;ipsum &lt;a href="><strong>dolor</strong></a> sit<br />amet alert("hello world");'
   },
 
   :unclosed => {
@@ -51,11 +50,11 @@ strings = {
   },
 
   :malicious => {
-    :html       => '<b>Lo<!-- comment -->rem</b> <a href="javascript:pants" title="foo">ipsum</a> <a href="http://foo.com/"> <strong>dolor</strong></a> sit<br/>amet <<foo>script>alert("hello world");</script>',
-    :default    => 'Lorem ipsum  dolor sitamet script&gt;alert("hello world");',
-    :restricted => '<b>Lorem</b> ipsum  <strong>dolor</strong> sitamet script&gt;alert("hello world");',
-    :basic      => '<b>Lorem</b> <a rel="nofollow">ipsum</a> <a href="http://foo.com/" rel="nofollow"> <strong>dolor</strong></a> sit<br />amet script&gt;alert("hello world");',
-    :relaxed    => '<b>Lorem</b> <a title="foo">ipsum</a> <a href="http://foo.com/"> <strong>dolor</strong></a> sit<br />amet script&gt;alert("hello world");'
+    :html       => '<b>Lo<!-- comment -->rem</b> <a href="javascript:pants" title="foo">ipsum</a> <a href="http://foo.com/"><strong>dolor</strong></a> sit<br/>amet <<foo>script>alert("hello world");</script>',
+    :default    => 'Lorem ipsum dolor sitamet script&gt;alert("hello world");',
+    :restricted => '<b>Lorem</b> ipsum <strong>dolor</strong> sitamet script&gt;alert("hello world");',
+    :basic      => '<b>Lorem</b> <a rel="nofollow">ipsum</a> <a href="http://foo.com/" rel="nofollow"><strong>dolor</strong></a> sit<br />amet script&gt;alert("hello world");',
+    :relaxed    => '<b>Lorem</b> <a title="foo">ipsum</a> <a href="http://foo.com/"><strong>dolor</strong></a> sit<br />amet script&gt;alert("hello world");'
   },
 
   :raw_comment => {
@@ -277,8 +276,8 @@ describe 'Config with object_url' do
   before { @s = Sanitize.new(:object_urls => ['http://www.youtube.com']) }
 
   should "allow a YouTube embed code" do
-    input = '<object width="425" height="344"> <param name="movie" value="http://www.youtube.com/v/qVaEPx_VyXs&hl=en&fs=1&color1=0xcc2550&color2=0xe87a9f"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/qVaEPx_VyXs&hl=en&fs=1&color1=0xcc2550&color2=0xe87a9f" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>'
-    output = '<object height="344" width="425"> <param name="movie" value="http://www.youtube.com/v/qVaEPx_VyXs&amp;hl=en&amp;fs=1&amp;color1=0xcc2550&amp;color2=0xe87a9f" /><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><embed allowfullscreen="true" type="application/x-shockwave-flash" src="http://www.youtube.com/v/qVaEPx_VyXs&amp;hl=en&amp;fs=1&amp;color1=0xcc2550&amp;color2=0xe87a9f" allowscriptaccess="always" height="344" width="425"></embed></object>'
+    input = '<object width="425" height="344"><param name="movie" value="http://www.youtube.com/v/qVaEPx_VyXs&hl=en&fs=1&color1=0xcc2550&color2=0xe87a9f"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/qVaEPx_VyXs&hl=en&fs=1&color1=0xcc2550&color2=0xe87a9f" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="344"></embed></object>'
+    output = '<object height="344" width="425"><param name="movie" value="http://www.youtube.com/v/qVaEPx_VyXs&amp;hl=en&amp;fs=1&amp;color1=0xcc2550&amp;color2=0xe87a9f" /><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><embed allowfullscreen="true" type="application/x-shockwave-flash" src="http://www.youtube.com/v/qVaEPx_VyXs&amp;hl=en&amp;fs=1&amp;color1=0xcc2550&amp;color2=0xe87a9f" allowscriptaccess="always" height="344" width="425"></embed></object>'
     @s.clean(input).should.equal(output)
   end
 
