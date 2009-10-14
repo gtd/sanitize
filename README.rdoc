@@ -1,5 +1,10 @@
 = Sanitize
 
+*NOTICE: This is a forked version of sanitize that bakes crude flash
+embed code support.  Ryan is working on a transformations branch that
+will allow this functionality to be implemented as middleware at which
+point I plan on killing this fork.*
+
 Sanitize is a whitelist-based HTML sanitizer. Given a list of acceptable
 elements and attributes, Sanitize will remove all unacceptable HTML from a
 string.

@@ -28,14 +28,12 @@ require 'rake/rdoctask'
 require 'lib/sanitize/version'
 
 gemspec = Gem::Specification.new do |s|
-  s.rubyforge_project = 'riposte'
-
-  s.name     = 'sanitize'
+  s.name     = 'dasil003-sanitize'
   s.summary  = 'Whitelist-based HTML sanitizer.'
   s.version  = Sanitize::VERSION
-  s.author   = 'Ryan Grove'
-  s.email    = 'ryan@wonko.com'
-  s.homepage = 'http://github.com/rgrove/sanitize/'
+  s.authors  = ['Ryan Grove', 'Gabe da Silveira']
+  s.email    = 'gabe@websaviour.com'
+  s.homepage = 'http://github.com/dasil003/sanitize/'
   s.platform = Gem::Platform::RUBY
 
   s.require_path          = 'lib'
